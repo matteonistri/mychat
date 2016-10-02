@@ -7,8 +7,12 @@ app = Flask(__name__)
 app.debug = True
 
 @app.route("/")
-def hello():
+def login():
     return render_template("login.html")
+
+@app.route("/chat/<user>")
+def chat(user):
+    return render_template("chat.html", user = user)
 
 if __name__ == "__main__":
     app.run(port=8080)
