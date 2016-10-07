@@ -16,7 +16,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">Chat history</h3>
       </div>
-      <div class="panel-body" id="chat" style="height:50%">
+      <div class="panel-body" id="chat" style="height:50%;overflow-y:scroll;overflow-x:hidden;">
       </div>
       <div class="panel-footer">
         <div class="input-group">
@@ -37,15 +37,28 @@
 
     socket.on('brmsg',function(message) {
       console.log(message)
-      console.log("as:" + $("#author").val())
+      $("#chat").scrollTop($("#chat")[0].scrollHeight);
       $("#chat").append(message.author + ": " + message.text + "<br>");
-      $("#msg").val("");
     });
 
     $(document).ready(function() {
       $("#send").on("click", function() {
-        socket.emit('mymessage', {author: $("#author").html(), msg: $('#msg').val()});
+        sendMessage();
       });
+
+      $('#msg').keyup(function(e){
+          if(e.keyCode == 13)
+          {
+              sendMessage();
+          }
+      });
+
+      function sendMessage() {
+        if ($("#msg").val() != "") {
+          socket.emit('mymessage', {author: $("#author").html(), msg: $('#msg').val()});
+          $("#msg").val("");
+        }
+      }
     });
   </script>
 </html>
